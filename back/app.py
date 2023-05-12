@@ -1,7 +1,9 @@
 from flask import Flask, request, jsonify, render_template
 from sentiment_analysis import analyze_sentiment
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route('/')
 def home():
