@@ -23,5 +23,10 @@ Back:
 - Flask cors
 - NLTK (Natural Language Toolkit)
 
+## Examples of using Sentiment
+![Local Image](./example//images/happy_example.png)
+![Local Image](./example//images/sad_example.png)
+
+
 ## Acknowledgements
 Special thanks to my friend who introduced me to NLTK and inspired me to create this sentiment analysis project.
