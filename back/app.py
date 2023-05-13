@@ -12,10 +12,14 @@ def home():
 
 @app.route('/api/sentiment', methods=['POST'])
 def sentiment():
-  data = request.get_json()
-  sentence = data.get('sentence')
-  sentiment_scores = analyze_sentiment(sentence)
-  return jsonify(sentiment_scores)
+  try:
+    data = request.get_json()
+    print(data)
+    sentence = data.get('sentence')
+    sentiment_scores = analyze_sentiment(sentence)
+    return jsonify(sentiment_scores)
+  except Exception as e:
+    return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
   app.run(debug=True)
