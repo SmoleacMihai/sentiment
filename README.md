@@ -30,3 +30,6 @@ Back:
 
 ## Acknowledgements
 Special thanks to my friend who introduced me to NLTK and inspired me to create this sentiment analysis project.
+
+## P.S
+This project is still in development stage, it is something I really enjoyed doing after so much time of loosing interest to programing, so if you have any suggestions I will be happy to implement them.
