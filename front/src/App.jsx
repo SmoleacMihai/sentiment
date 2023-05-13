@@ -10,7 +10,7 @@ import { DivWrapper, TextInput } from './components/styled/App/index.styled';
 const App = () => {
   const [result, setResult] = useState(null);
   const [sentence, setSentence] = useState('');
-  const [imgSrc, setImgSrc] = useState("public/assets/neutral.svg");
+  const [imgSrc, setImgSrc] = useState('public/assets/neutral.svg');
 
   const mutation = useMutation(fetchSentiment, {
     onSuccess: (data) => {
