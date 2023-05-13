@@ -1,61 +1,58 @@
 import { useEffect, useState } from 'react'
-import './App.css'
 import getImagePathByCompound from './utils/getImagePathByCompound';
+import { fetchSentiment } from './fetchers/fetchSentiment';
+import { useMutation } from 'react-query';
+import PieChart from './components/PieChart';
+import { Stack } from '@mui/material';
+import getConditions from './static/getSusListArray'
+import { DivWrapper, TextInput } from './components/styled/App/index.styled';
 
 const App = () => {
   const [result, setResult] = useState(null);
-  const [imgSrc, setImgSrc] = useState("public/assets/neutral.svg");
   const [sentence, setSentence] = useState('');
+  const [imgSrc, setImgSrc] = useState("public/assets/neutral.svg");
 
-  useEffect(() => {
-    const fetchSentiment = async () => {
-      try {
-        const response = await fetch('http://127.0.0.1:5000/api/sentiment', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ sentence })
-        });
-        if (!response.ok) {
-          throw new Error('Request failed');
-        }
-        const data = await response.json();
-        setResult(data);
-        setImgSrc(getImagePathByCompound(result.compound))
-      } catch (error) {
-        console.error('Error fetching sentiment:', error);
-      }
-    };
+  const mutation = useMutation(fetchSentiment, {
+    onSuccess: (data) => {
+      console.log(data);
+      setResult(data);
+    },
+    onError: (error) => {
+      console.error(error);
+    },
+  });
 
-    if (sentence !== '') {
-      fetchSentiment();
+  useEffect(()=>{
+    setImgSrc(getImagePathByCompound(result?.compound));
+
+    if (sentence === '') {
+      setImgSrc("public/assets/neutral.svg")
     }
-  }, [sentence]);
 
-  const handleFormSubmit = (e) => {
-    e.preventDefault();
+    if(getConditions(sentence).some(condition => condition)){
+      setImgSrc("public/assets/sus.svg")
+    }
+    
+  }, [sentence, result])
+
+  const handleInputChange = (event) => {
+    const { value } = event.target;
+    setSentence(value);
+    mutation.mutate(value);
+    
   };
+
   return (
-    <>
-      <div>
-      <form onSubmit={handleFormSubmit}>
-        <input type="text" name="sentence" onChange={(e) => setSentence(e.target.value)}/>
-      </form>
-
-      {result && (
-        <div>
-          <p>Compound: {result.compound}</p>
-          <p>Negativity: {result.neg}</p>
-          <p>Positivity: {result.pos}</p>
-          <p>Neutrality: {result.neu}</p>
-        </div>
-      )}
-      <img src={imgSrc} alt="emojiface" />
-
-    </div>
-    </>
+    <DivWrapper>
+      <TextInput type="text" name="sentence" value={sentence} onChange={handleInputChange}/>
+      <Stack>
+        <img src={imgSrc} alt="emojiface" />
+        {result && (
+          <PieChart result={result}/>
+        )}
+      </Stack>
+    </DivWrapper>
   )
 }
 
-export default App
+export default App;
